@@ -1,5 +1,6 @@
 #import <iostream>
 #import <cmath>
+#include <string>
 #include <vector>
 
 //IN THIS FUN LITTLE PROJECT WE'RE TRYING TO PREDICT SHARP TURNS NOW WHAT WE means
@@ -11,15 +12,19 @@
 using namespace std;
 
 //defining functions.
-void read_coords(int &x, int &y, vector<int> &arr);
-char calculate(vector<int> &arr);
-void clean_array(vector<int> &arr);
+void read_coords(vector<int> &x, vector<int> &y);
+void calculate(vector<int> &x, vector<int> &y, vector <double> &phi);
+void clean_arrays(vector<int> &x, vector<int> &y, vector<double> &phi);
+char inspect(int a, vector <double> &phi);
 
 int main(){
 //defining key variables.
   int T = 0;
   int N = 0;
-  vector<int> coords;
+  vector<int> x;
+  vector<int> y;
+  vector <double> phi;
+  //phi.at(0) = NAN;
 
 //enter the number of test cases T.
   do {
@@ -37,71 +42,65 @@ for(int z = 0; z < T; z++){
   printf("Test case number %d : \n ", (z+1));
   for(int i = 1; i < N+1; i++){
 //coordinates to be read in.
-    int x;
-    int y;
-    cin >> x;
-    cin >> y;
-    read_coords(x, y, coords);
-
-    if (i % 3 == 0){
-      char result = calculate(coords);
-      cout << result << " ";
-//test for a sharp turn, if there is then result = n. Ask input for new coords.
-      while(result == 'n'){
-        cout << "There's a sharp turn, would you prefer to change coords? (enter in new x,y)" << endl;
-        cin >> x;
-        cin >> y;
-        coords[4] = x;
-        coords[5] = y;
-        result = calculate(coords);
-//print out the new result.
-        if(result == 'y'){
-        		cout << result << endl;
-        		clean_array(coords); //reduce the array size to zero.
-        }
-      }
-    }
+    read_coords(x, y);
   }
+//lets calculate the angle of turn now and fill phi vector array
+  calculate(x, y, phi);
+//lets print out the coordinates.
+  for(vector<int>::size_type i = 1; i < x.size(); i++) {
+	  cout << x.at(i) << " " << y.at(i) << endl;
+  }
+//see the results of our journey. LAST VALUE IS MEANINGLESS. out of bound problem.
+  for(vector<int>::size_type i = 0; i < phi.size() - 1; i++) {
+  	cout << inspect(i, phi) << " ";
+  }
+//finally lets clean our array for the second test phase.
+  clean_arrays(x, y, phi);
+
 }
 
   return 0;
 
 }
 
-char calculate(vector<int> &array){
-  //the turn occurs at the second pair i.e. 2,3.
-  //BAC Triangle, we're after the angle BAC, the angle which subtends the line BC.
-  //LET BC = a, AC = b, AB = c.
-  double a, b, c;
-  double phi;
-  double theta;
 
-  a = sqrt(pow((array.at(0) - array.at(4)), 2) + pow((array.at(1) - array.at(5)), 2));
-  b = sqrt(pow((array.at(2) - array.at(4)), 2) + pow((array.at(3) - array.at(5)), 2));
-  c = sqrt(pow((array.at(0) - array.at(2)), 2) + pow((array.at(1) - array.at(3)), 2));
-
-  phi = acos( - (pow(a,2) - pow(b,2) - pow(c,2) )/(2.0 * b * c));
-  theta = M_PI - phi;
-
-//check for a sharp turn. y means no sharp turn, n means sharp turn.
-  if(theta > M_PI / 4.0){
-    return 'n';
-
-}  else {
-    return 'y';
-}
-
+char inspect(int a, vector <double> &phi){
+		//lets inspect each element in the vector array phi.
+	if(phi[a] > (M_PI / 4)){
+		return 'n';
+		} else if(phi[a] < (M_PI / 4)){
+			return 'y';
+		}
 }
 
 
-void read_coords(int &x, int &y, vector<int> &array){
-//take a single pair of coord, store it in and print it to the console.
-  array.push_back(x);
-  array.push_back(y);
-  printf("%d %d \n", x, y);
+
+void calculate(vector<int> &x, vector<int> &y, vector <double> &phi){
+//let's calculate the angle of turn between two events and fill the array of phi(s).
+
+	double phii;
+
+	for(vector<int>::size_type i = 1; i < x.size(); i++) {
+      phii = acos(((x[i] - x[i-1])*(x[i+1] - x[i])+(y[i] - y[i-1])*(y[i+1] - y[i]))/sqrt((pow((x[i] - x[i-1]), 2) + pow((y[i] - y[i-1]), 2))*(pow((x[i+1] - x[i]), 2) + pow((y[i+1] - y[i]), 2))));
+      phi.push_back(phii);
+  }
+}
+
+
+void read_coords(vector<int> &x, vector<int> &y){
+//take a single pair of coord and store it in.
+	int x_cord;
+	int y_cord;
+	cin >> x_cord;
+	cin >> y_cord;
+
+	x.push_back(x_cord);
+	y.push_back(y_cord);
 
 }
 
-void clean_array(vector<int> &array){
-  array.clear();
+void clean_arrays(vector<int> &x, vector<int> &y, vector<double> &phi){
+  x.clear();
+  y.clear();
+  phi.clear();
 }
