@@ -15,7 +15,7 @@ using namespace std;
 void read_coords(vector<int> &x, vector<int> &y);
 void calculate(vector<int> &x, vector<int> &y, vector <double> &phi);
 void clean_arrays(vector<int> &x, vector<int> &y, vector<double> &phi);
-char inspect(int a, vector <double> &phi);
+string inspect(int a, vector <double> &phi);
 
 int main(){
 //defining key variables.
@@ -64,12 +64,12 @@ for(int z = 0; z < T; z++){
 }
 
 
-char inspect(int a, vector <double> &phi){
+string inspect(int a, vector <double> &phi){
 		//lets inspect each element in the vector array phi.
 	if(phi[a] > (M_PI / 4)){
-		return 'n';
+		return "no";
 		} else if(phi[a] < (M_PI / 4)){
-			return 'y';
+			return "yes";
 		}
 }
 
