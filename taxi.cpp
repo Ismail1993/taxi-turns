@@ -15,7 +15,6 @@ void read_coords(vector<int> &x, vector<int> &y);
 void calculate(vector<int> &x, vector<int> &y, vector <double> &phi);
 void clean_arrays(vector<int> &x, vector<int> &y, vector<double> &phi);
 char inspect(int a, vector <double> &phi);
-void change_coords(int n, vector<int> &x, vector<int> &y, vector <double> &phi);
 
 int main(){
 //defining key variables.
@@ -43,20 +42,21 @@ int main(){
 	  }
 //lets calculate the angle of turn now and fill phi vector array
 	  calculate(x, y, phi);
-//see the results of our journey.
-	  for(vector<int>::size_type i = 0; i < phi.size(); i++) {
-
-		  if (inspect(i, phi) == 'n'){
-//n stands for the Nth moment that we will change.
-			  int n;
-			  cin >> n;
-
-//change coordinates & clear phi for new entries.
-			  change_coords(n, x, y, phi);
-
-//calculate new phi.
-			  calculate(x, y, phi);
-
+//Assumption: If there are more than one phii > 45 degrees then its not possible to change a moment so that there are no sharp turns.
+	  int flag = 0;
+	  for(vector<int>::size_type i = 0; i < phi.size(); i++){
+		if(phi.at(i) > 0.79){
+			flag++;
+		}	
+		if(flag > 1){
+			cout << 'n' << ' ' << 'n' << endl;
+			break;
+		}
+	}
+			  
+			  
+			  
+			  
 //lets print out the coordinates & output the result.
 			  for(vector<int>::size_type i = 0; i < x.size(); i++) {
 				  cout << x.at(i) << " " << y.at(i) << endl;
@@ -116,18 +116,6 @@ void read_coords(vector<int> &x, vector<int> &y){
 
 }
 
-void change_coords(int n, vector<int> &x, vector<int> &y, vector <double> &phi){
-	int ex;
-	int ey;
-	//type in new x,y coordinates.
-	cin >> ex;
-	cin >> ey;
-	//reflect that change in the x,y array of coordinates. 'n - 1' because indicies start from zero.
-	x.at(n - 1) = ex;
-	y.at(n - 1) = ey;
-	//call in calculate to recalculate our phi's.
-	phi.clear();
-}
 
 void clean_arrays(vector<int> &x, vector<int> &y, vector<double> &phi){
 	x.clear();
