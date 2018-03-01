@@ -98,8 +98,8 @@ void calculate(vector<int> &x, vector<int> &y, vector <double> &phi){
 	double phii;
 
 	for(vector<int>::size_type i = 1; i < x.size() - 1; i++) {
-      phii = acos(((x[i] - x[i-1])*(x[i+1] - x[i])+(y[i] - y[i-1])*(y[i+1] - y[i]))/sqrt((pow((x[i] - x[i-1]), 2) + pow((y[i] - y[i-1]), 2))*(pow((x[i+1] - x[i]), 2) + pow((y[i+1] - y[i]), 2))));
-      phi.push_back(phii);
+      		phii = acos(((x[i] - x[i-1])*(x[i+1] - x[i])+(y[i] - y[i-1])*(y[i+1] - y[i]))/sqrt((pow((x[i] - x[i-1]), 2) + pow((y[i] - y[i-1]), 2))*(pow((x[i+1] - x[i]), 2) + pow((y[i+1] - y[i]), 2))));
+      		phi.push_back(phii);
   }
 }
 
